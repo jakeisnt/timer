@@ -10,7 +10,7 @@
 
 ;; display count to element on dom!
 (define (display-count tm)
-  ($/:= (get-elem "clock") ($/str tm)))
+  ($/:= (get-elem "clock") "asdf"))
 
 
 (define (interval-fn)
