@@ -1,5 +1,23 @@
 <!doctype html>
 <html lang="en-us">
+    <style>
+     @import url("https://jakeisnt.github.io/styles/box.css");
+     html {
+         font-size: 20px;
+         font-family: "Arial", "Helvetica", sans-serif;
+     }
+     body {
+         margin: 0;
+         display: flex;
+         padding: 0.5em;
+         flex-direction: column;
+         justify-content: center;
+     }
+     #clock {
+         font-size: 10em;
+         padding: 1em 1em;
+     }
+    </style>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -17,7 +35,7 @@
             <div id="clock">
                 <div id="minutes"/></div>
                 <div id="seconds"/></div>
-            </div>
+        </div>
         </div>
         <script type="module" src="./js-build/modules/main.rkt.js"></script>
         <!--[if lt IE 8]>
