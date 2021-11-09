@@ -41,9 +41,7 @@
 (define (add-img path)
   (define img (create-elem "img"))
   ($/:= #js.img.src path)
-  (define width #js.img.clientWidth)
-  (define height #js.img.clientHeight)
-  (values img width height))
+  img)
 
 #; { String -> Natural }
 ;; Convert a number of minutes (potentially a string) to seconds
@@ -139,6 +137,10 @@
   (set-timer!
    (get-stop-time START-TIME) (now)))
 
+(define (on-game-end! in)
+  (pause-timer! in)
+  (on-game-end "lerner.png" -100)
+  (on-game-end "amal.png" 0 -100 0.2 0.5))
 
 
 #; { Natural [Natural] -> Interval }
@@ -151,7 +153,7 @@
     (define cur-time (now))
     (set-timer! goal-time cur-time)
     (when (no-diff? goal-time cur-time)
-      (pause-timer! interval)))
+      (on-game-end! interval)))
 
   (define interval
     (#js*.setInterval interval-fn timeout))
@@ -202,17 +204,21 @@
                      [start-y 0]
                      [vx-default 0.3]
                      [vy-default 0.3])
-  (define-values (img w h) (add-img pic-name))
+  (define img (add-img pic-name))
 
   ($/:= #js.img.style.position "absolute")
   ($/:= #js.img.style.zIndex "999")
+  ($/:= #js.img.style.top "0")
+  ($/:= #js.img.style.left "0")
   (#js.document.body.appendChild #js.img)
 
   (define x start-x)
   (define y start-y)
 
-  (define W (screen-width))
-  (define H (screen-height))
+  ; TODO theses should be fetched dynamically,
+  ; but the typical javascript  ways fetched 0?
+  (define w 80)
+  (define h 80)
 
   (define vx vx-default)
   (define vy vy-default)
@@ -220,6 +226,9 @@
   (define prev (cur-performance))
 
   (define (frame ts)
+    (define W (screen-width))
+    (define H (screen-height))
+
     (define dt (- ts prev))
     (set! x (max 0 (min (- W w) (+ x (* dt vx)))))
     (set! y (max 0 (min (- H h) (+ y (* dt vy)))))
@@ -237,9 +246,6 @@
     (set! prev ts)
     (#js.window.requestAnimationFrame frame))
   (#js.window.requestAnimationFrame frame))
-
-(on-game-end "lerner.png")
-(on-game-end "amal.png" 200 800 0.2 0.5)
 
 
 ;; TODO
