@@ -163,8 +163,12 @@
       (λ (_) (reset-timer!)))
 
 
+;; Keyboard shortcuts
+($/:= #js.document.onkeyup
+      (λ (e)
+        (when (= #js.e.keyCode 32)
+          (toggle-timer!))))
+
 ;; TODO
 ;; - set timer with ui
-;; - add keyboard shortcuts
-;; - don't make `minutes`, `seconds` labels shift in UI
 ;; - animation and sounds when timer ends
