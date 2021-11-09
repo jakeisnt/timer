@@ -157,9 +157,6 @@
 
 
 ;; TODO
-;; - Reset button
-;;   - Stop timer
-;;   - Reset to original starting value
 ;; - set timer with ui
 ;; - add keyboard shortcuts
-;; - don't make `minutes`, `seconds` labels shift
+;; - don't make `minutes`, `seconds` labels shift in UI
