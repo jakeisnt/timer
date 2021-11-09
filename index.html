@@ -3,18 +3,18 @@
     <style>
      @import url("https://jakeisnt.github.io/styles/box.css");
      html {
-         font-size: 20px;
+         font-size: 30px;
          font-family: "Arial", "Helvetica", sans-serif;
      }
      body {
          margin: 0;
          display: flex;
-         padding: 0.5em;
          flex-direction: column;
          justify-content: center;
      }
      #clock {
-         padding: 1em 1em;
+         padding: 1em;
+         padding-top: 0;
      }
      #minutes {
          font-size: 10em;
@@ -25,6 +25,7 @@
      .time-label {
          padding-left: 0.5em;
          font-size: 2em;
+         min-width: 225px;
      }
      #root {
          display: flex;
@@ -34,12 +35,32 @@
      .buttons {
          display: flex;
          font-size: 1em;
-         padding: 2em;
+         padding-top: 1.25em;
          flex-direction: column;
+     }
+
+     @media screen and (min-width: 1000px) {
+         .buttons {
+             padding-right: 3em;
+         }
+         body {
+             padding: 1em;
+         }
+         #clock {
+             padding-left: 3em;
+         }
      }
      .time-box {
          display: flex;
          flex-direction: row;
+     }
+     .time {
+         min-width: 1.2em;
+     }
+     .box {
+         font-size: 30px;
+         min-width: 5.5em;
+         margin-bottom: 0.5em;
      }
     </style>
     <head>
@@ -48,7 +69,6 @@
         <title> timer!! </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
@@ -57,26 +77,17 @@
         <div id="root">
             <div id="clock">
                 <div class="time-box">
-                    <div id="minutes"/></div><p class="time-label">minutes</p>
-                </div>
-                <div class="time-box">
-                    <div id="seconds"/></div><p class="time-label">seconds</p>
-                </div>
+                    <div class="time" id="minutes"/></div><p class="time-label" id="mins-label">minutes</p>
             </div>
-            <div class="buttons">
-                <button id="start-button" class="box">start</button>
-                <button id="reset-button" class="box">reset</button>
-            </div>
+            <div class="time-box">
+                <div class="time" id="seconds"/></div><p class="time-label" id="secs-label">seconds</p>
+        </div>
+        </div>
+        <div class="buttons">
+            <button id="start-button" class="box">start</button>
+            <button id="reset-button" class="box">reset</button>
+        </div>
         </div>
         <script type="module" src="./js-build/modules/main.rkt.js"></script>
-        <!--[if lt IE 8]>
-            <p class="browserupgrade">
-            You are using an <strong>outdated</strong> browser. Please
-            <a href="http://browsehappy.com/">upgrade your browser</a> to improve
-            your experience.
-            </p>
-        <![endif]-->
-
-
     </body>
 </html>

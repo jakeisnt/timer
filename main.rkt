@@ -92,6 +92,12 @@
 (define (set-timer! goal-time cur-time)
   (define-values (mins secs) (mins-secs-diff goal-time cur-time))
   (set! TIME-LEFT (seconds-left goal-time cur-time))
+  (if (= mins 1)
+    (set-elem! "mins-label" "minute")
+    (set-elem! "mins-label" "minutes"))
+  (if (= secs 1)
+    (set-elem! "secs-label" "second")
+    (set-elem! "secs-label" "seconds"))
   (set-elem! "minutes" mins)
   (set-elem! "seconds" secs))
 
@@ -130,7 +136,7 @@
 (set-initial-timer!)
 
 ;; Toggle the timer
-(define (toggle-timer)
+(define (toggle-timer!)
   (cond
     ;; If the time left is 0, we're restarting the timer
     [(and (not TIMER) (= TIME-LEFT 0))
@@ -147,7 +153,8 @@
   (set-initial-timer!))
 
 
-($/:= #js.start-button.onclick (λ (_) (toggle-timer)))
+($/:= #js.start-button.onclick
+      (λ (_) (toggle-timer!)))
 
 (define reset-button
   (get-elem-by-id "reset-button"))
