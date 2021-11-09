@@ -17,9 +17,9 @@ jobs:
           distribution: 'full'
           version: '8.2'
       - name: install dependencies
-        run: raco pkg install --auto --batch
+        run: raco pkg install --auto --batch --no-docs
       - name: compile site
-        run: 'racks main.rkt'
+        run: '/usr/racket/bin/racks main.rkt'
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
