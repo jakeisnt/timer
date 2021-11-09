@@ -17,12 +17,21 @@
          font-size: 10em;
          padding: 1em 1em;
      }
+     #root {
+         display: flex;
+         flex-direction: row;
+         justify-content: space-between;
+     }
+     .buttons {
+         display: flex;
+         padding: 2em;
+         flex-direction: column;
+     }
     </style>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title> website
-        </title>
+        <title> timer!! </title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -31,12 +40,15 @@
 
     </head>
     <body>
-        <div id="root" class="root">
+        <div id="root">
             <div id="clock">
                 <div id="minutes"/></div>
                 <div id="seconds"/></div>
             </div>
-            <button id="start-button" class="box">start</button>
+            <div class="buttons">
+                <button id="start-button" class="box">start</button>
+                <button id="reset-button" class="box">reset</button>
+            </div>
         </div>
         <script type="module" src="./js-build/modules/main.rkt.js"></script>
         <!--[if lt IE 8]>
