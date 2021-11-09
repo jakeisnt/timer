@@ -11,15 +11,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install Racket
-        uses: Bogdanp/setup-racket@v0.11
+        uses: Bogdanp/setup-racket@v1.7
         with:
           architecture: 'x64'
           distribution: 'full'
           version: '8.2'
+          dest: '/opt/racket'
       - name: install dependencies
         run: raco pkg install --auto --batch --no-docs
       - name: compile site
-        run: '/usr/racket/bin/racks main.rkt'
+        run: '/opt/racket/bin/racks main.rkt'
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
