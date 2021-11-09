@@ -16,11 +16,12 @@ jobs:
           architecture: 'x64'
           distribution: 'full'
           version: '8.2'
-          dest: '/opt/racket'
+          dest: '$GITHUB_WORKSPACE/racket'
       - name: install dependencies
         run: raco pkg install --auto --no-docs racketscript
+      - run: 'ls -al $GITHUB_WORKSPACE/racket'
       - name: compile site
-        run: 'racks main.rkt'
+        run: '$GITHUB_WORKSPACE/racket/bin/racks main.rkt'
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
