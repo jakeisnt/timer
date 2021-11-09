@@ -17,13 +17,11 @@ jobs:
           distribution: 'full'
           version: '8.2'
           dest: '/opt/racket'
-          sudo: never
-          local_catalogs: $GITHUB_WORKSPACE
       - name: install dependencies
         run: raco pkg install --auto --no-docs racketscript
-      - run: 'ls -al $GITHUB_WORKSPACE/'
+      - run: 'ls -al ../'
       - name: compile site
-        run: '$GITHUB_WORKSPACE/8.2/bin/racks main.rkt'
+        run: '../.racket/8.2/bin/racks main.rkt'
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
