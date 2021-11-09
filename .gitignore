@@ -1,7 +1,4 @@
 .direnv/*
 !.direnv/.git-keep
 node_modules/
-js-build/cache
-js-build/links
-!.zo
 rackt
