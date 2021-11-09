@@ -41,30 +41,31 @@
 (define (mins-secs-diff goal cur-time)
   (define dist (- goal cur-time))
   (define minutes (floor (/ dist 60000)))
-  (define seconds (floor (/ dist 100)))
+  (define seconds (floor (/ (- dist (* 60000 minutes)) 1000)))
 
   ;; TODO: looks like modulo operator doesn't work so well!
   ;; (define minutes (/ (modulo dist (* 1000 60 60)) (* 1000 60)))
   ;; (define seconds (/ (modulo dist (* 1000 60)) 1000))
   (values minutes seconds))
 
+;; is there no significant difference between the two times?
+(define (no-diff? goal curr-time)
+  (define-values (mins secs) (mins-secs-diff goal curr-time))
+  (and (= mins 0) (= secs 0)))
 
 (define NUM-SECS (get-time-in-seconds
                (query-param MINS-PARAM)))
-(define INTERVAL 1000)
+(define INTERVAL 100)
 (define GOAL-TIME (goal-time NUM-SECS))
 
 (define (interval-fn)
   (define cur-time (now))
-  (println cur-time)
-  (if (= 0 (- GOAL-TIME cur-time))
+  (define-values (mins secs) (mins-secs-diff GOAL-TIME cur-time))
+  (if (no-diff? GOAL-TIME cur-time)
       (begin
         (#js*.clearInterval interval)
         (set-elem! "clock" "DONE!"))
-      (let-values
-          ([(mins secs) (mins-secs-diff GOAL-TIME cur-time)])
-        (println mins)
-        (println secs)
+      (begin
         (set-elem! "minutes" mins)
         (set-elem! "seconds" secs))))
 
