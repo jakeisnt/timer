@@ -2,4 +2,5 @@
 !.direnv/.git-keep
 node_modules/
 js-build/
+!js-build/modules/main.rkt.js
 rackt
