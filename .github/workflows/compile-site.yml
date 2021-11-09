@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - main
+      - gh-actions
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Install Racket
+        uses: Bogdanp/setup-racket@v0.11
+        with:
+          architecture: 'x64'
+          distribution: 'full'
+          version: '8.2'
+      - name: install dependencies
+        run: raco pkg install --auto --batch
+      - name: compile site
+        run: 'racks main.rkt'
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages
+          folder: public
