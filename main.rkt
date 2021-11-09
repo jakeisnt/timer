@@ -47,6 +47,11 @@
   (define seconds (floor (/ (- dist (* 60000 minutes)) 1000)))
   (values minutes seconds))
 
+;; get the seconds left
+(define (seconds-left goal cur-time)
+  (define-values (mins secs) (mins-secs-diff goal cur-time))
+  (+ (* mins 60) secs))
+
 #; { Date Date -> Bool }
 ;; is there no significant difference between the two times?
 (define (no-diff? goal curr-time)
@@ -57,31 +62,75 @@
 (define (get-seconds)
   (define mb-param (get-query-param MINS-PARAM))
   (define ms-param (get-query-param SECS-PARAM))
-  (+ 1 (cond
+  (cond
     [(not (void? mb-param)) (minutes->seconds mb-param)]
     [(not (void? ms-param)) ms-param]
-    [else DEFAULT-SECS])))
+    [else DEFAULT-SECS]))
 
+(define (set-timer goal-time cur-time)
+  (define-values (mins secs) (mins-secs-diff goal-time cur-time))
+  (set-elem! "minutes" mins)
+  (set-elem! "seconds" secs))
+
+(define (pause-timer in)
+  (#js*.clearInterval in))
 
 #; { Natural [Natural] -> Interval }
 ;; start a timer for a given amount of time and set interval
 (define (start-timer tm [timeout 500])
   (define goal-time (get-stop-time tm))
+
   (define (interval-fn)
     (define cur-time (now))
-    (define-values (mins secs) (mins-secs-diff goal-time cur-time))
-    (if (no-diff? goal-time cur-time)
-        (begin
-          (#js*.clearInterval interval)
-          (set-elem! "clock" "done"))
-        (begin
-          (set-elem! "minutes" mins)
-          (set-elem! "seconds" secs))))
+    (set-timer goal-time cur-time)
+    (when (no-diff? goal-time cur-time)
+      (pause-timer interval)))
+
   (define interval
     (#js*.setInterval interval-fn timeout))
   interval)
 
-(start-timer (get-seconds))
+
+(define TIME-LEFT (get-seconds))
+(define TIMER-RUNNING #f)
+(define TIMER #f)
+
+;; Set the timer initially
+(set-timer
+ (get-stop-time TIME-LEFT) (now))
+
+;; Get ref to start button
+(define start-button
+  (#js.document.getElementById ($/str "start-button")))
+
+(define (toggle-timer)
+  (cond
+
+
+    )
+  )
+
+
+;; when the timer starts:
+;; - get seconds left
+;; - set interval for the timer
+;; - set button to 'pause'
+;; when it stops:
+;; - set seconds left
+;; - stop interval for the timer
+;; - set button to 'start'
+
+($/:= #js.start-button.onclick
+      (λ (_)
+        (if TIME-LEFT
+            (pause-timer TIMER)
+            (begin
+              (set! TIMER (start-timer (get-seconds)))
+              ($/:= #js.start-button.innerHTML "stop")
+              )
+            )))
+
+
 
 ;; TODO
 ;; - pause and play timer
