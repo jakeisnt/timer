@@ -17,11 +17,9 @@ jobs:
           distribution: 'full'
           version: '8.2'
           dest: '/opt/racket'
-      - name: install dependencies
-        run: raco pkg install --auto --no-docs racketscript
-      - run: 'ls -al ../'
+          packages: 'racketscript'
       - name: compile site
-        run: '../.racket/8.2/bin/racks main.rkt'
+        run: 'racks main.rkt'
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
