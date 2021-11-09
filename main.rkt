@@ -8,6 +8,19 @@
 (define SECS-PARAM "secs")
 (define DEFAULT-SECS 300)
 
+(define (screen-width)
+  (or #js.document.documentElement.clientWidth
+      #js.document.body.clientWidth
+      #js.window.innerWidth))
+
+(define (screen-height)
+  (or #js.document.documentElement.clientHeight
+      #js.document.body.clientHeight
+      #js.window.innerHeight))
+
+(define (cur-performance)
+  (#js*.performance.now))
+
 ;; { String -> String }
 ;; Get the URL query parameter assoc with the provided name
 (define (get-query-param param-name)
@@ -20,6 +33,17 @@
 
 (define (set-html! elem body)
   ($/:= #js.elem.innerHTML body))
+
+(define (create-elem tagname)
+  (#js.document.createElement ($/str tagname)))
+
+;; add image to DOM, returning its ref, width and height
+(define (add-img path)
+  (define img (create-elem "img"))
+  ($/:= #js.img.src path)
+  (define width #js.img.clientWidth)
+  (define height #js.img.clientHeight)
+  (values img width height))
 
 #; { String -> Natural }
 ;; Convert a number of minutes (potentially a string) to seconds
@@ -115,6 +139,8 @@
   (set-timer!
    (get-stop-time START-TIME) (now)))
 
+
+
 #; { Natural [Natural] -> Interval }
 ;; start a timer for a given amount of time and set interval
 (define (start-timer tm [timeout 100])
@@ -169,6 +195,52 @@
       (λ (e)
         (when (= #js.e.keyCode 32)
           (toggle-timer!))))
+
+
+(define (on-game-end pic-name
+                     [start-x 0]
+                     [start-y 0]
+                     [vx-default 0.3]
+                     [vy-default 0.3])
+  (define-values (img w h) (add-img pic-name))
+
+  ($/:= #js.img.style.position "absolute")
+  ($/:= #js.img.style.zIndex "999")
+  (#js.document.body.appendChild #js.img)
+
+  (define x start-x)
+  (define y start-y)
+
+  (define W (screen-width))
+  (define H (screen-height))
+
+  (define vx vx-default)
+  (define vy vy-default)
+
+  (define prev (cur-performance))
+
+  (define (frame ts)
+    (define dt (- ts prev))
+    (set! x (max 0 (min (- W w) (+ x (* dt vx)))))
+    (set! y (max 0 (min (- H h) (+ y (* dt vy)))))
+
+    ($/:= #js.img.style.transform
+          ;; TODO didn't work without number->string, silently failed
+          (js-string (string-append "translate(" (number->string x) "px, " (number->string y) "px)")))
+
+    (when (or (<= x 0) (>= (+ x w) W))
+      (set! vx (* vx -1)))
+
+    (when (or (<= y 0) (>= (+ y h) H))
+      (set! vy (* vy -1)))
+
+    (set! prev ts)
+    (#js.window.requestAnimationFrame frame))
+  (#js.window.requestAnimationFrame frame))
+
+(on-game-end "lerner.png")
+(on-game-end "amal.png" 200 800 0.2 0.5)
+
 
 ;; TODO
 ;; - set timer with ui
