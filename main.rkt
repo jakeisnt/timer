@@ -250,4 +250,4 @@
 
 ;; TODO
 ;; - set timer with ui
-;; - animation and sounds when timer ends
+;; - sounds when timer ends
