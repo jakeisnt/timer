@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en-us">
+    <style>
+     @import url("https://jakeisnt.github.io/styles/box.css");
+     html {
+         font-size: 20px;
+         font-family: "Arial", "Helvetica", sans-serif;
+     }
+     body {
+         margin: 0;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+     }
+     #clock {
+         user-select: none;
+         padding: 1em;
+         padding-top: 0;
+     }
+     #minutes {
+         font-size: 10em;
+     }
+     #seconds {
+         font-size: 10em;
+     }
+     .time-label {
+         display: none;
+     }
+     #root {
+         display: flex;
+         flex-direction: column;
+         justify-content: space-between;
+     }
+     .buttons {
+         display: flex;
+         font-size: 1em;
+         padding-top: 1.25em;
+         flex-direction: column;
+     }
+
+     @media only screen and (min-width: 390px) {
+         .time-label {
+             display: inline;
+             font-size: 1.5em;
+             min-width: 125px;
+         }
+     }
+     @media only screen and (min-width: 450px) {
+         .time-label {
+             padding-left: 0.5em;
+             font-size: 2em;
+             min-width: 225px;
+         }
+     }
+
+     /* small vertical desktop */
+     @media screen and (min-width: 500px) {
+         html {
+             font-size: 30px;
+         }
+         #root {
+             flex-direction: row;
+         }
+     }
+
+     /* full screen desktop */
+     @media screen and (min-width: 1000px) {
+         .buttons {
+             padding-right: 3em;
+         }
+         body {
+             padding: 1em;
+         }
+         #clock {
+             padding-left: 3em;
+         }
+     }
+     .time-box {
+         display: flex;
+         flex-direction: row;
+     }
+     .time {
+         min-width: 1.2em;
+     }
+     .box {
+         font-size: 30px;
+         min-width: 5.5em;
+         margin-bottom: 0.5em;
+     }
+    </style>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Timer</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    </head>
+    <body>
+        <div id="root">
+            <div id="clock">
+                <div class="time-box">
+                    <div class="time" id="minutes"/></div><p class="time-label" id="mins-label">minutes</p>
+            </div>
+            <div class="time-box">
+                <div class="time" id="seconds"/></div><p class="time-label" id="secs-label">seconds</p>
+        </div>
+        </div>
+        <div class="buttons">
+            <button id="start-button" class="box">start</button>
+            <button id="reset-button" class="box">reset</button>
+        </div>
+        </div>
+        <script type="module" src="./js-build/modules/main.rkt.js"></script>
+    </body>
+</html>

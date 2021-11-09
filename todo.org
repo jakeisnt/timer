@@ -1,0 +1,3 @@
+* Inbox
+** TODO looks like (modulo) doesn't work - report upstream
+[[file:~/timer/main.rkt::define seconds (floor (/ (- dist (* 60000 minutes)) 1000))]]
