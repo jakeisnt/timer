@@ -72,4 +72,11 @@
 (define interval
   (#js*.setInterval interval-fn INTERVAL))
 
+;; TODO
+;; - pause and play timer
+;; - don't start timer on page load
+;; - set timer with ui as well as through url
+;; - enable mins:secs query parameter for time configuration
+;; - improve UI!
+
 interval
