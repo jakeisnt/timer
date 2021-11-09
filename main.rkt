@@ -164,6 +164,7 @@
 
 
 ;; Keyboard shortcuts
+;; TODO make cool macro for this
 ($/:= #js.document.onkeyup
       (λ (e)
         (when (= #js.e.keyCode 32)
