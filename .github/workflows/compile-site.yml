@@ -18,7 +18,7 @@ jobs:
           version: '8.2'
           dest: '/opt/racket'
       - name: install dependencies
-        run: raco pkg install racketscript --no-docs
+        run: raco pkg install racketscript
       - name: compile site
         run: 'racks main.rkt'
       - name: Deploy
