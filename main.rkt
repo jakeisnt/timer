@@ -113,7 +113,7 @@
 ;; start a timer for a given amount of time and set interval
 (define (start-timer tm [timeout 100])
   ($/:= #js.start-button.innerHTML "pause")
-  (define goal-time (get-stop-time tm))
+  (define goal-time (get-stop-time (+ 1 tm))) ;; Add 1 to show the first second for a whole second
 
   (define (interval-fn)
     (define cur-time (now))
@@ -162,4 +162,4 @@
 ;;   - Reset to original starting value
 ;; - set timer with ui
 ;; - add keyboard shortcuts
-;; - improve UI!
+;; - don't make `minutes`, `seconds` labels shift

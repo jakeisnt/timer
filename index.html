@@ -14,8 +14,17 @@
          justify-content: center;
      }
      #clock {
-         font-size: 10em;
          padding: 1em 1em;
+     }
+     #minutes {
+         font-size: 10em;
+     }
+     #seconds {
+         font-size: 10em;
+     }
+     .time-label {
+         padding-left: 0.5em;
+         font-size: 2em;
      }
      #root {
          display: flex;
@@ -24,8 +33,13 @@
      }
      .buttons {
          display: flex;
+         font-size: 1em;
          padding: 2em;
          flex-direction: column;
+     }
+     .time-box {
+         display: flex;
+         flex-direction: row;
      }
     </style>
     <head>
@@ -42,8 +56,12 @@
     <body>
         <div id="root">
             <div id="clock">
-                <div id="minutes"/></div>
-                <div id="seconds"/></div>
+                <div class="time-box">
+                    <div id="minutes"/></div><p class="time-label">minutes</p>
+                </div>
+                <div class="time-box">
+                    <div id="seconds"/></div><p class="time-label">seconds</p>
+                </div>
             </div>
             <div class="buttons">
                 <button id="start-button" class="box">start</button>
