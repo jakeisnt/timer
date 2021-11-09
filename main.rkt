@@ -56,11 +56,11 @@
 ;; Get the seconds configured or provided for the timer
 (define (get-seconds)
   (define mb-param (get-query-param MINS-PARAM))
-  (define ms-param (get-query-param MINS-PARAM))
-  (cond
+  (define ms-param (get-query-param SECS-PARAM))
+  (+ 1 (cond
     [(not (void? mb-param)) (minutes->seconds mb-param)]
     [(not (void? ms-param)) ms-param]
-    [else DEFAULT-SECS]))
+    [else DEFAULT-SECS])))
 
 
 #; { Natural [Natural] -> Interval }
@@ -73,17 +73,13 @@
     (if (no-diff? goal-time cur-time)
         (begin
           (#js*.clearInterval interval)
-          (set-elem! "clock" "DONE!"))
+          (set-elem! "clock" "done"))
         (begin
           (set-elem! "minutes" mins)
           (set-elem! "seconds" secs))))
   (define interval
     (#js*.setInterval interval-fn timeout))
   interval)
-
-
-;; (println (minutes->seconds (get-query-param MINS-PARAM)))
-(println (get-seconds))
 
 (start-timer (get-seconds))
 
