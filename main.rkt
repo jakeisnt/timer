@@ -106,7 +106,7 @@
 ;; if flip, flip the result corresponding to some max time
 (define (get-time-between goal-time cur-time [flip #f] [max-time 0])
   (define secs-left (seconds-left goal-time cur-time))
-  (if FLIP
+  (if flip
     (seconds->mins+secs (- max-time secs-left))
     (seconds->mins+secs secs-left)))
 
