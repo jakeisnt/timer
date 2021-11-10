@@ -38,7 +38,13 @@
 (define (create-elem tagname)
   (#js.document.createElement ($/str tagname)))
 
-(define (pad-str s) s)
+(define (pad-str s)
+  (define s-str (js-string s))
+  (println s-str)
+  (println (+ "   " s-str))
+  (if (= 1 #js.s-str.length)
+      (+ " " s-str)
+      s-str))
 
 ;; add image to DOM, returning its ref, width and height
 (define (add-img path)
