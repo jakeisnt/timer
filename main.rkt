@@ -38,6 +38,8 @@
 (define (create-elem tagname)
   (#js.document.createElement ($/str tagname)))
 
+(define (pad-str s) s)
+
 ;; add image to DOM, returning its ref, width and height
 (define (add-img path)
   (define img (create-elem "img"))
@@ -140,8 +142,8 @@
   (if (= secs 1)
     (set-elem! "secs-label" "second")
     (set-elem! "secs-label" "seconds"))
-  (set-elem! "minutes" mins)
-  (set-elem! "seconds" secs))
+  (set-elem! "minutes" (pad-str mins))
+  (set-elem! "seconds" (pad-str secs)))
 
 ;; Get ref to start button
 (define start-button
