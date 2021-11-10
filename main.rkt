@@ -7,6 +7,10 @@
 (define MINS-PARAM "mins")
 (define SECS-PARAM "secs")
 (define FLIP-PARAM "flip")
+;; 1 second
+(define MIN-SECS 1)
+;; just under 1 hour
+(define MAX-SECS (+ (* 59 60) 59))
 (define DEFAULT-SECS 300)
 
 ;; ----- DOM -----
@@ -60,6 +64,16 @@
 ;; escape javascript semantics madness
 (define (sanitize-number n)
   (string->number (js-string->string n)))
+
+(define (ensure-in a b)
+  (lambda (n)
+    (cond
+      [(< n a) a]
+      [(> n b) b]
+      [else n])))
+
+(define ensure-in-secs
+  (ensure-in MIN-SECS MAX-SECS))
 
 
 ;; ----- Time -----
@@ -117,7 +131,9 @@
 (define (get-seconds)
   (define mb-param (get-query-param MINS-PARAM))
   (define ms-param (get-query-param SECS-PARAM))
-  (cond
+
+  (ensure-in-secs
+   (cond
     [(and (not (void? mb-param))
           (not (void? ms-param)))
      ;; TODO this was exhibiting JS string concat bug
@@ -126,7 +142,7 @@
                              (sanitize-number mb-param))]
     [(not (void? ms-param))
      (sanitize-number ms-param)]
-    [else DEFAULT-SECS]))
+    [else DEFAULT-SECS])))
 
 
 ;; should the timer start flipped?

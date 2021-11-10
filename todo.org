@@ -18,9 +18,12 @@ CLOSED: [2021-11-10 Wed 12:23]
 ** TODO update query parameters when settings change dynamically
 ** DONE rename flip - > 'count up', 'count down'
 CLOSED: [2021-11-10 Wed 12:15]
-** TODO be defensive - enforce min and max time
+** DONE be defensive - enforce min and max time
+CLOSED: [2021-11-10 Wed 12: 29]
 (max: 23h, 59s),with min:1s
 if parameter or setting is outside bounds its quantized to fit in bounds
+
+NOTE: ended up doing 59 mins, 59 secs
 ** TODO tick up, tick down animation when timer changes
 i want to see the number 'roll' up or 'roll' down in response
 ** HOLD hot reloading
