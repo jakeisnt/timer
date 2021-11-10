@@ -6,7 +6,20 @@ CLOSED: [2021-11-10 Wed 00:38]
 (students with extra time need this)
 ** TODO play sound when timer ends
 ** TODO configure the timer with UI
+- click on number to start adjusting it
+- highlight number with highlighter
+- scroll up or up arrow increases the number
+- selecting out of number bounding box (highlighted) exits this mode
+- also place four small buttons (not big like current ones) to do same thing
+- alternatively, bind keyboard shortcuts to mins+, mins-, secs+, secs-
 ** TODO footer with links, information, docs, keyboard shortcuts, etc
 ** TODO add more keyboard shortcuts
 ** TODO update query parameters when settings change dynamically
 ** TODO rename flip - > 'count up', 'count down' 
+** TODO be defensive - enforce min and max time
+(max: 23h, 59s),with min:1s
+if parameter or setting is outside bounds its quantized to fit in bounds
+** TODO tick up, tick down animation when timer changes
+i want to see the number 'roll' up or 'roll' down in response
+** TODO hot reloading
+it's frustrating to recompile every time! i just want it to work! 
