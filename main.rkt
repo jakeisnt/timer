@@ -6,6 +6,7 @@
 
 (define MINS-PARAM "mins")
 (define SECS-PARAM "secs")
+(define FLIP-PARAM "flip")
 (define DEFAULT-SECS 300)
 
 (define (screen-width)
@@ -105,15 +106,34 @@
      (sanitize-number ms-param)]
     [else DEFAULT-SECS]))
 
+(define (should-flip)
+  (equal? "t" (get-query-param FLIP-PARAM)))
+
 
 (define START-TIME (get-seconds))
 (define TIME-LEFT START-TIME)
 (define TIMER #f)
+(define FLIP (should-flip))
+
+
+(define (get-time-between goal-time cur-time)
+  (define-values (mins secs)
+        (mins-secs-diff goal-time cur-time))
+  (if FLIP
+      (let*
+        ([mins-start (floor (/ START-TIME 60))]
+         [secs-start (- START-TIME (* mins-start 60))])
+      (values
+       (- mins-start mins)
+       (- secs-start secs)))
+      (values mins secs)))
 
 ;; set the timer and the website state
 (define (set-timer! goal-time cur-time)
-  (define-values (mins secs) (mins-secs-diff goal-time cur-time))
+  (define-values (mins secs)
+        (get-time-between goal-time cur-time))
   (set! TIME-LEFT (seconds-left goal-time cur-time))
+
   (if (= mins 1)
     (set-elem! "mins-label" "minute")
     (set-elem! "mins-label" "minutes"))
@@ -190,6 +210,18 @@
 ($/:= #js.reset-button.onclick
       (λ (_) (reset-timer!)))
 
+(define flip-button
+  (get-elem-by-id "flip-button"))
+
+(define (flip!)
+  (set! FLIP (not FLIP))
+  (set-timer!
+   (get-stop-time TIME-LEFT) (now)))
+
+
+($/:= #js.flip-button.onclick
+      (λ (_) (flip!)))
+
 
 ;; Keyboard shortcuts
 ;; TODO make cool macro for this
@@ -198,7 +230,7 @@
         (when (= #js.e.keyCode 32)
           (toggle-timer!))))
 
-
+;; scary things happen when the game ends
 (define (on-game-end pic-name
                      [start-x 0]
                      [start-y 0]
@@ -217,8 +249,8 @@
 
   ; TODO theses should be fetched dynamically,
   ; but the typical javascript  ways fetched 0?
-  (define w 80)
-  (define h 80)
+  (define w 100)
+  (define h 100)
 
   (define vx vx-default)
   (define vy vy-default)
