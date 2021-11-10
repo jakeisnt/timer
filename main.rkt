@@ -9,6 +9,8 @@
 (define FLIP-PARAM "flip")
 (define DEFAULT-SECS 300)
 
+;; ----- DOM -----
+
 (define (screen-width)
   (or #js.document.documentElement.clientWidth
       #js.document.body.clientWidth
@@ -32,19 +34,18 @@
 (define (get-elem-by-id id)
   (#js.document.getElementById ($/str id)))
 
-(define (set-html! elem body)
+(define (set-elem! elem body)
   ($/:= #js.elem.innerHTML body))
 
+#; { String String -> Void }
+;; Set the DOM element whose id is specified by V's content to val
+(define (set-elem-by-id! id val)
+  (define el (#js.document.getElementById ($/str id)))
+  (set-elem! el ($/str val)))
+
+;; Create an HTML element with the provided tag name
 (define (create-elem tagname)
   (#js.document.createElement ($/str tagname)))
-
-(define (pad-str s)
-  (define s-str (js-string s))
-  (println s-str)
-  (println (+ "   " s-str))
-  (if (= 1 #js.s-str.length)
-      (+ " " s-str)
-      s-str))
 
 ;; add image to DOM, returning its ref, width and height
 (define (add-img path)
@@ -52,16 +53,21 @@
   ($/:= #js.img.src path)
   img)
 
+;; ----- Utils -----
+
+(define (pad-str s) s)
+
+;; escape javascript semantics madness
+(define (sanitize-number n)
+  (string->number (js-string->string n)))
+
+
+;; ----- Time -----
+
 #; { String -> Natural }
 ;; Convert a number of minutes (potentially a string) to seconds
 (define (minutes->seconds tm)
   (* ($/str tm) 60))
-
-#; { String String -> Void }
-;; Set the DOM element whose id is specified by V's content to val
-(define (set-elem! id val)
-  (define el (#js.document.getElementById ($/str id)))
-  ($/:= #js.el.innerHTML ($/str val)))
 
 #; { -> Date }
 ;; Get the current date
@@ -95,9 +101,22 @@
   (define-values (mins secs) (mins-secs-diff goal curr-time))
   (and (= mins 0) (= secs 0)))
 
-;; escape javascript semantics madness
-(define (sanitize-number n)
-  (string->number (js-string->string n)))
+;; get the time in minutes and seconds between two times
+;; if flip, flip the result corresponding to some max time
+(define (get-time-between goal-time cur-time [flip #f] [max-time 0])
+  (define-values (mins secs)
+        (mins-secs-diff goal-time cur-time))
+  (if FLIP
+      (let*
+        ([mins-start (floor (/ max-time 60))]
+         [secs-start (- max-time (* mins-start 60))])
+      (values
+       (- mins-start mins)
+       (- secs-start secs)))
+      (values mins secs)))
+
+
+;; ----- Start / Settings
 
 ;; Get the seconds configured or provided for the timer
 (define (get-seconds)
@@ -114,9 +133,13 @@
      (sanitize-number ms-param)]
     [else DEFAULT-SECS]))
 
+
+;; should the timer start flipped?
 (define (should-flip)
   (equal? "t" (get-query-param FLIP-PARAM)))
 
+
+;; ----- Stateful Game -----
 
 (define START-TIME (get-seconds))
 (define TIME-LEFT START-TIME)
@@ -124,52 +147,23 @@
 (define FLIP (should-flip))
 
 
-(define (get-time-between goal-time cur-time)
-  (define-values (mins secs)
-        (mins-secs-diff goal-time cur-time))
-  (if FLIP
-      (let*
-        ([mins-start (floor (/ START-TIME 60))]
-         [secs-start (- START-TIME (* mins-start 60))])
-      (values
-       (- mins-start mins)
-       (- secs-start secs)))
-      (values mins secs)))
-
-;; set the timer and the website state
+;; set the timer and the state of the site
 (define (set-timer! goal-time cur-time)
   (define-values (mins secs)
-        (get-time-between goal-time cur-time))
+        (get-time-between goal-time cur-time FLIP START-TIME))
   (set! TIME-LEFT (seconds-left goal-time cur-time))
 
   (if (= mins 1)
-    (set-elem! "mins-label" "minute")
-    (set-elem! "mins-label" "minutes"))
+    (set-elem-by-id! "mins-label" "minute")
+    (set-elem-by-id! "mins-label" "minutes"))
   (if (= secs 1)
-    (set-elem! "secs-label" "second")
-    (set-elem! "secs-label" "seconds"))
-  (set-elem! "minutes" (pad-str mins))
-  (set-elem! "seconds" (pad-str secs)))
+    (set-elem-by-id! "secs-label" "second")
+    (set-elem-by-id! "secs-label" "seconds"))
+  (set-elem-by-id! "minutes" (pad-str mins))
+  (set-elem-by-id! "seconds" (pad-str secs)))
 
-;; Get ref to start button
-(define start-button
-  (get-elem-by-id "start-button"))
 
-(define (pause-timer! in)
-  (#js*.clearInterval in)
-  ($/:= #js.start-button.innerHTML "start")
-  (set! TIMER #f))
-
-;; set initial timer
-(define (set-initial-timer!)
-  (set-timer!
-   (get-stop-time START-TIME) (now)))
-
-(define (on-game-end! in)
-  (pause-timer! in)
-  (on-game-end "lerner.png" -100)
-  (on-game-end "amal.png" 0 -100 0.2 0.5))
-
+;; ----- Event Handlers -----
 
 #; { Natural [Natural] -> Interval }
 ;; start a timer for a given amount of time and set interval
@@ -188,9 +182,6 @@
   (set! TIMER interval)
   interval)
 
-;; Set the timer initially
-(set-initial-timer!)
-
 ;; Toggle the timer
 (define (toggle-timer!)
   (cond
@@ -204,10 +195,39 @@
     ;; Otherwise, start the timer?
     [else (start-timer TIME-LEFT)]))
 
+;; reset the timer to the starting timer
 (define (reset-timer!)
   (when TIMER (pause-timer! TIMER))
   (set-initial-timer!))
 
+;; set up the game's initial timer values
+(define (set-initial-timer!)
+  (set-timer!
+   (get-stop-time START-TIME) (now)))
+
+;; pause the referenced timer, saving its state
+(define (pause-timer! in)
+  (#js*.clearInterval in)
+  ($/:= #js.start-button.innerHTML "start")
+  (set! TIMER #f))
+
+;; flip the current time!
+;; if we're counting up, count down, and vice versa
+(define (flip!)
+  (set! FLIP (not FLIP))
+  (set-timer!
+   (get-stop-time TIME-LEFT) (now)))
+
+;; show the timer end animation
+(define (on-game-end! in)
+  (pause-timer! in)
+  (on-game-end "lerner.png" -100)
+  (on-game-end "amal.png" 0 -100 0.2 0.5))
+
+
+;; ----- Event Binding -----
+(define start-button
+  (get-elem-by-id "start-button"))
 
 ($/:= #js.start-button.onclick
       (λ (_) (toggle-timer!)))
@@ -221,15 +241,8 @@
 (define flip-button
   (get-elem-by-id "flip-button"))
 
-(define (flip!)
-  (set! FLIP (not FLIP))
-  (set-timer!
-   (get-stop-time TIME-LEFT) (now)))
-
-
 ($/:= #js.flip-button.onclick
       (λ (_) (flip!)))
-
 
 ;; Keyboard shortcuts
 ;; TODO make cool macro for this
@@ -238,7 +251,14 @@
         (when (= #js.e.keyCode 32)
           (toggle-timer!))))
 
-;; scary things happen when the game ends
+
+;; Set the timer initially
+(set-initial-timer!)
+
+
+;; ----- Scary Stuff -----
+
+;; invoke animation
 (define (on-game-end pic-name
                      [start-x 0]
                      [start-y 0]
