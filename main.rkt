@@ -210,6 +210,9 @@
 ;; if we're counting up, count down, and vice versa
 (define (flip!)
   (set! FLIP (not FLIP))
+  (if FLIP
+      ($/:= #js.flip-button.innerHTML "count down")
+      ($/:= #js.flip-button.innerHTML "count up"))
   (set-timer!
    (get-stop-time TIME-LEFT) (now)))
 
@@ -257,6 +260,9 @@
 
 ;; Set the timer initially
 (set-initial-timer!)
+;; flip twice to get original settings
+(flip!)
+(flip!)
 
 
 ;; ----- Scary Stuff -----

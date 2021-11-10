@@ -15,13 +15,14 @@ CLOSED: [2021-11-10 Wed 00:38]
 ** TODO footer with links, information, docs, keyboard shortcuts, etc
 ** TODO add more keyboard shortcuts
 ** TODO update query parameters when settings change dynamically
-** TODO rename flip - > 'count up', 'count down' 
+** DONE rename flip - > 'count up', 'count down'
+CLOSED: [2021-11-10 Wed 12:15]
 ** TODO be defensive - enforce min and max time
 (max: 23h, 59s),with min:1s
 if parameter or setting is outside bounds its quantized to fit in bounds
 ** TODO tick up, tick down animation when timer changes
 i want to see the number 'roll' up or 'roll' down in response
-** TODO hot reloading
+** HOLD hot reloading
 it's frustrating to recompile every time! i just want it to work! 
-
 fix upstream
+may have a better place in some sort of web framework module instead
