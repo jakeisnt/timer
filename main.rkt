@@ -219,8 +219,8 @@
   (define (end)
     (on-game-end
       (if (= 0 (random 2))
-        "lerner.png"
-        "amal.png")
+        "assets/lerner.png"
+        "assets/amal.png")
       (random (screen-width))
       (random (screen-height))
       (- (random) 0.5)
