@@ -9,3 +9,4 @@ CLOSED: [2021-11-10 Wed 00:38]
 ** TODO footer with links, information, docs, keyboard shortcuts, etc
 ** TODO add more keyboard shortcuts
 ** TODO update query parameters when settings change dynamically
+** TODO rename flip - > 'count up', 'count down' 
