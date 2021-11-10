@@ -69,6 +69,12 @@
 (define (minutes->seconds tm)
   (* ($/str tm) 60))
 
+;; convert seconds to appropriate num mins and seconds
+(define (seconds->mins+secs secs)
+  (define minutes (floor (/ secs 60)))
+  (define seconds (floor (- secs (* minutes 60))))
+  (values minutes seconds))
+
 #; { -> Date }
 ;; Get the current date
 (define (now)
@@ -82,41 +88,30 @@
    (+ (#js.cur-time.getSeconds) num-secs))
   cur-time)
 
+;; diff in seconds between two dates
+(define (seconds-left goal cur-time)
+  (floor (/ (- goal cur-time) 1000)))
+
 #; { Time Time -> (Values Natural Natural) }
 ;; get the difference between two times in minutes and seconds
 (define (mins-secs-diff goal cur-time)
-  (define dist (- goal cur-time))
-  (define minutes (floor (/ dist 60000))) ;; TODO nicer math
-  (define seconds (floor (/ (- dist (* 60000 minutes)) 1000)))
-  (values minutes seconds))
-
-;; get the seconds left
-(define (seconds-left goal cur-time)
-  (define-values (mins secs) (mins-secs-diff goal cur-time))
-  (+ (* mins 60) secs))
+  (seconds->mins+secs (seconds-left goal cur-time)))
 
 #; { Date Date -> Bool }
 ;; is there no significant difference between the two times?
 (define (no-diff? goal curr-time)
-  (define-values (mins secs) (mins-secs-diff goal curr-time))
-  (and (= mins 0) (= secs 0)))
+  (= 0 (seconds-left goal curr-time)))
 
 ;; get the time in minutes and seconds between two times
 ;; if flip, flip the result corresponding to some max time
 (define (get-time-between goal-time cur-time [flip #f] [max-time 0])
-  (define-values (mins secs)
-        (mins-secs-diff goal-time cur-time))
+  (define secs-left (seconds-left goal-time cur-time))
   (if FLIP
-      (let*
-        ([mins-start (floor (/ max-time 60))]
-         [secs-start (- max-time (* mins-start 60))])
-      (values
-       (- mins-start mins)
-       (- secs-start secs)))
-      (values mins secs)))
+    (seconds->mins+secs (- max-time secs-left))
+    (seconds->mins+secs secs-left)))
 
 
-;; ----- Start / Settings
+;; ----- Start / Settings -----
 
 ;; Get the seconds configured or provided for the timer
 (define (get-seconds)
