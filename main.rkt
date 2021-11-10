@@ -217,10 +217,15 @@
 (define (on-game-end! in)
   (pause-timer! in)
   (define (end)
-    (if (= 0 (random 2))
-      (on-game-end "lerner.png" -100)
-      (on-game-end "amal.png" 0 -100 0.2 0.5)))
-  (#js*.setInterval end 100))
+    (on-game-end
+      (if (= 0 (random 2))
+        "lerner.png"
+        "amal.png")
+      (random (screen-width))
+      (random (screen-height))
+      (- (random) 0.5)
+      (- (random) 0.5)))
+  (#js*.setInterval end 250))
 
 
 ;; ----- Event Binding -----
