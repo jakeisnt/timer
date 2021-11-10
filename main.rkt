@@ -63,7 +63,10 @@
 
 ;; escape javascript semantics madness
 (define (sanitize-number n)
-  (string->number (js-string->string n)))
+  (if (and (string? n) (number? (string->number n)))
+      (floor (string->number n)) #f))
+
+  ;; (equal? 'NaN maybe-number)
 
 (define (ensure-in a b)
   (lambda (n)
@@ -127,21 +130,23 @@
 
 ;; ----- Start / Settings -----
 
+(define (get-seconds-param)
+  (sanitize-number (get-query-param SECS-PARAM)))
+
+(define (get-minutes-param)
+  (sanitize-number (get-query-param MINS-PARAM)))
+
 ;; Get the seconds configured or provided for the timer
 (define (get-seconds)
-  (define mb-param (get-query-param MINS-PARAM))
-  (define ms-param (get-query-param SECS-PARAM))
+  (define mb-mins (get-seconds-param))
+  (define mb-secs (get-minutes-param))
 
   (ensure-in-secs
    (cond
-    [(and (not (void? mb-param))
-          (not (void? ms-param)))
-     ;; TODO this was exhibiting JS string concat bug
-     (+ (minutes->seconds (sanitize-number mb-param)) (sanitize-number ms-param))]
-    [(not (void? mb-param)) (minutes->seconds
-                             (sanitize-number mb-param))]
-    [(not (void? ms-param))
-     (sanitize-number ms-param)]
+    [(and mb-mins mb-secs)
+     (+ (minutes->seconds mb-mins) mb-secs)]
+    [mb-mins (minutes->seconds mb-mins)]
+    [mb-secs mb-secs]
     [else DEFAULT-SECS])))
 
 
