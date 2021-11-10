@@ -12,7 +12,8 @@ CLOSED: [2021-11-10 Wed 00:38]
 - selecting out of number bounding box (highlighted) exits this mode
 - also place four small buttons (not big like current ones) to do same thing
 - alternatively, bind keyboard shortcuts to mins+, mins-, secs+, secs-
-** TODO footer with links, information, docs, keyboard shortcuts, etc
+** DONE footer with links, information, docs, keyboard shortcuts, etc
+CLOSED: [2021-11-10 Wed 12:23]
 ** TODO add more keyboard shortcuts
 ** TODO update query parameters when settings change dynamically
 ** DONE rename flip - > 'count up', 'count down'
