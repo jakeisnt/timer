@@ -216,8 +216,11 @@
 ;; show the timer end animation
 (define (on-game-end! in)
   (pause-timer! in)
-  (on-game-end "lerner.png" -100)
-  (on-game-end "amal.png" 0 -100 0.2 0.5))
+  (define (end)
+    (if (= 0 (random 2))
+      (on-game-end "lerner.png" -100)
+      (on-game-end "amal.png" 0 -100 0.2 0.5)))
+  (#js*.setInterval end 100))
 
 
 ;; ----- Event Binding -----
