@@ -266,6 +266,7 @@
                      [vy-default 0.3])
   (define img (add-img pic-name))
 
+  ;; TODO improve ergonomics of setting styles dynamically
   ($/:= #js.img.style.position "absolute")
   ($/:= #js.img.style.zIndex "999")
   ($/:= #js.img.style.top "0")
@@ -275,8 +276,8 @@
   (define x start-x)
   (define y start-y)
 
-  ; TODO theses should be fetched dynamically,
-  ; but the typical javascript  ways fetched 0?
+  ; TODO these should be fetched dynamically,
+  ; but typical javascript methods produced 0
   (define w 100)
   (define h 100)
 
@@ -306,8 +307,3 @@
     (set! prev ts)
     (#js.window.requestAnimationFrame frame))
   (#js.window.requestAnimationFrame frame))
-
-
-;; TODO
-;; - set timer with ui
-;; - sounds when timer ends

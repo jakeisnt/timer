@@ -1,6 +1,11 @@
 * Inbox
 ** TODO looks like (modulo) doesn't work - report upstream
 [[file:~/timer/main.rkt::define seconds (floor (/ (- dist (* 60000 minutes)) 1000))]]
-** TODO support count up from 0 to the time
+** DONE support count up from 0 to the time
+CLOSED: [2021-11-10 Wed 00:38]
 (students with extra time need this)
-** TODO some sort of sound
+** TODO play sound when timer ends
+** TODO configure the timer with UI
+** TODO footer with links, information, docs, keyboard shortcuts, etc
+** TODO add more keyboard shortcuts
+** TODO update query parameters when settings change dynamically
