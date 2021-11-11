@@ -28,12 +28,13 @@
 (define (cur-performance)
   (#js*.performance.now))
 
-;; { String -> String }
+;; { String -> [Maybe String] }
 ;; Get the URL query parameter assoc with the provided name
 (define (get-query-param param-name)
   (define query-string #js.window.location.search)
   (define urlparams ($/new (#js*.URLSearchParams #js.query-string)))
-  (#js.urlparams.get param-name))
+  (define param-result (#js.urlparams.get ($/str param-name)))
+  (if (void? param-result) #f (js-string->string param-result)))
 
 (define (get-elem-by-id id)
   (#js.document.getElementById ($/str id)))
@@ -61,13 +62,17 @@
 
 (define (pad-str s) s)
 
-;; escape javascript semantics madness
+#; { [Maybe String] -> [Maybe Natural] }
+;; Parse a number from a string if the string exists
+;; If the string can't be a number, or the number is not a natural, return #f
 (define (sanitize-number n)
-  (if (and (string? n) (number? (string->number n)))
-      (floor (string->number n)) #f))
+  (and n (number? (string->number n))
+      (let ([num (string->number n)])
+        (if (< num 0) #f (floor num)))))
 
-  ;; (equal? 'NaN maybe-number)
-
+#; { Number Number -> [Number -> Number] }
+;; Generate a function to ensure a number is between `a` and `b`
+;; Assume that the number lies within
 (define (ensure-in a b)
   (lambda (n)
     (cond
@@ -81,10 +86,10 @@
 
 ;; ----- Time -----
 
-#; { String -> Natural }
+#; { Natural -> Natural }
 ;; Convert a number of minutes (potentially a string) to seconds
 (define (minutes->seconds tm)
-  (* ($/str tm) 60))
+  (* tm 60))
 
 ;; convert seconds to appropriate num mins and seconds
 (define (seconds->mins+secs secs)
@@ -130,16 +135,22 @@
 
 ;; ----- Start / Settings -----
 
+#; { -> Maybe Natural }
+;; Get the setting for number of seconds if the parameter is defined
 (define (get-seconds-param)
   (sanitize-number (get-query-param SECS-PARAM)))
 
+
+#; { -> Maybe Natural }
+;; Get the setting for number of minutes if the parameter is defined
 (define (get-minutes-param)
   (sanitize-number (get-query-param MINS-PARAM)))
 
-;; Get the seconds configured or provided for the timer
+#; { -> Natural }
+;; Get the number of seconds configured for or provided for the timer
 (define (get-seconds)
-  (define mb-mins (get-seconds-param))
-  (define mb-secs (get-minutes-param))
+  (define mb-mins (get-minutes-param))
+  (define mb-secs (get-seconds-param))
 
   (ensure-in-secs
    (cond
@@ -150,8 +161,9 @@
     [else DEFAULT-SECS])))
 
 
+#; { -> Bool }
 ;; should the timer start flipped?
-(define (should-flip)
+(define (get-flip-param)
   (equal? "t" (get-query-param FLIP-PARAM)))
 
 
@@ -160,7 +172,7 @@
 (define START-TIME (get-seconds))
 (define TIME-LEFT START-TIME)
 (define TIMER #f)
-(define FLIP (should-flip))
+(define FLIP (get-flip-param))
 
 
 ;; set the timer and the state of the site
