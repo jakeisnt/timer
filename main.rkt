@@ -65,16 +65,10 @@
   sound)
 
 #; { Audio -> Audio }
-;; Play audio as soon as it's available!
+;; Play audio
+;; Assume that the audio has loaded by the time this is invoked!
 (define (play-sound sound)
-  (println "trying to play sounds")
-  (#js*.console.log sound)
   (#js.sound.play)
-  (#js.sound.addEventListener
-   "canplaythrough"
-   (λ (event)
-     (println "Playing sound!")
-     (#js.sound.play)))
   sound)
 
 #; { Audio -> Audio }
