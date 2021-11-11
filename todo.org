@@ -1,7 +1,4 @@
 * Inbox
-** TODO looks like (modulo) doesn't work - report upstream
-[[file:~/timer/main.rkt::define seconds (floor (/ (- dist (* 60000 minutes)) 1000))]]
-** TODO `sleep` is also not implemented
 ** DONE support count up from 0 to the time
 CLOSED: [2021-11-11 Thu 16:50]
 (students with extra time need this)
@@ -16,8 +13,6 @@ CLOSED: [2021-11-11 Thu 16:50]
 - alternatively, bind keyboard shortcuts to mins+, mins-, secs+, secs-
 ** DONE footer with links, information, docs, keyboard shortcuts, etc
 CLOSED: [2021-11-10 Wed 12:23]
-** TODO add more keyboard shortcuts
-** TODO update query parameters when settings change dynamically
 ** DONE rename flip - > 'count up', 'count down'
 CLOSED: [2021-11-10 Wed 12:15]
 ** DONE be defensive - enforce min and max time
@@ -26,9 +21,16 @@ CLOSED: [2021-11-10 Wed 12: 29]
 if parameter or setting is outside bounds its quantized to fit in bounds
 
 NOTE: ended up doing 59 mins, 59 secs
+** TODO add more keyboard shortcuts
+** TODO update query parameters when settings change dynamically
 ** TODO tick up, tick down animation when timer changes
 i want to see the number 'roll' up or 'roll' down in response
 ** HOLD hot reloading
 it's frustrating to recompile every time! i just want it to work! 
 fix upstream
 may have a better place in some sort of web framework module instead
+** TODO Racketscript bugs
+*** TODO looks like (modulo) doesn't work - report upstream
+[[file:~/timer/main.rkt::define seconds (floor (/ (- dist (* 60000 minutes)) 1000))]]
+*** TODO `sleep` is also not implemented
+*** TODO i wish the ($/new ) could accept inline arguments to the constructor
