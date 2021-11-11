@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+firefox --new-tab "file:///home/jake/timer/index.html"
+hot '../.racket/8.2/bin/racks main.rkt' main.rkt
