@@ -58,6 +58,32 @@
   ($/:= #js.img.src path)
   img)
 
+#; { String -> Audio }
+;; Load a sound from a file!
+(define (load-sound path)
+  (define sound ($/new (#js*.Audio #js.path)))
+  sound)
+
+#; { Audio -> Audio }
+;; Play audio as soon as it's available!
+(define (play-sound sound)
+  (println "trying to play sounds")
+  (#js*.console.log sound)
+  (#js.sound.play)
+  (#js.sound.addEventListener
+   "canplaythrough"
+   (λ (event)
+     (println "Playing sound!")
+     (#js.sound.play)))
+  sound)
+
+#; { Audio -> Audio }
+;; Pause sound that's playing
+(define (pause-sound sound)
+  (#js.sound.pause)
+  sound)
+
+
 ;; ----- Utils -----
 
 (define (pad-str s) s)
@@ -173,6 +199,7 @@
 (define TIME-LEFT START-TIME)
 (define TIMER #f)
 (define FLIP (get-flip-param))
+(define ALARM (load-sound "assets/alarm.mp3"))
 
 
 ;; set the timer and the state of the site
@@ -203,7 +230,7 @@
     (define cur-time (now))
     (set-timer! goal-time cur-time)
     (when (no-diff? goal-time cur-time)
-      (on-game-end! interval)))
+      (on-timer-end! interval)))
 
   (define interval
     (#js*.setInterval interval-fn timeout))
@@ -250,8 +277,9 @@
    (get-stop-time TIME-LEFT) (now)))
 
 ;; show the timer end animation
-(define (on-game-end! in)
+(define (on-timer-end! in)
   (pause-timer! in)
+  (play-sound ALARM)
   (define (end)
     (on-game-end
       (if (= 0 (random 2))
@@ -349,3 +377,4 @@
     (set! prev ts)
     (#js.window.requestAnimationFrame frame))
   (#js.window.requestAnimationFrame frame))
+
