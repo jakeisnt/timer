@@ -1,10 +1,12 @@
 * Inbox
 ** TODO looks like (modulo) doesn't work - report upstream
 [[file:~/timer/main.rkt::define seconds (floor (/ (- dist (* 60000 minutes)) 1000))]]
+** TODO `sleep` is also not implemented
 ** DONE support count up from 0 to the time
-CLOSED: [2021-11-10 Wed 00:38]
+CLOSED: [2021-11-11 Thu 16:50]
 (students with extra time need this)
-** TODO play sound when timer ends
+** DONE play sound when timer ends
+CLOSED: [2021-11-11 Thu 16:50]
 ** TODO configure the timer with UI
 - click on number to start adjusting it
 - highlight number with highlighter
