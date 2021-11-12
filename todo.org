@@ -36,3 +36,4 @@ may have a better place in some sort of web framework module instead
 [[file:~/timer/main.rkt::define seconds (floor (/ (- dist (* 60000 minutes)) 1000))]]
 *** TODO `sleep` is also not implemented
 *** TODO i wish the ($/new ) could accept inline arguments to the constructor
+*** TODO better way to interface with javascript objects?
