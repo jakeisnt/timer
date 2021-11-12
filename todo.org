@@ -21,6 +21,8 @@ CLOSED: [2021-11-10 Wed 12: 29]
 if parameter or setting is outside bounds its quantized to fit in bounds
 
 NOTE: ended up doing 59 mins, 59 secs
+** DONE on press of reset button, remove all of the images
+CLOSED: [2021-11-11 Thu 19:12]
 ** TODO add more keyboard shortcuts
 ** TODO update query parameters when settings change dynamically
 ** TODO tick up, tick down animation when timer changes
