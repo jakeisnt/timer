@@ -12,6 +12,7 @@
 ;; just under 1 hour
 (define MAX-SECS (+ (* 59 60) 59))
 (define DEFAULT-SECS 300)
+(define PROF-ANIM-CLASS-NAME "prof-animation")
 
 ;; ----- DOM -----
 
@@ -194,6 +195,7 @@
 (define TIMER #f)
 (define FLIP (get-flip-param))
 (define ALARM (load-sound "assets/alarm.mp3"))
+(define END-ANIMATION #f)
 
 
 ;; set the timer and the state of the site
@@ -244,8 +246,33 @@
     ;; Otherwise, start the timer?
     [else (start-timer TIME-LEFT)]))
 
+(define (remove-elems-by-classname name)
+  (define elems-to-rm
+    (#js*.document.getElementsByClassName #js.name))
+
+  (for ([(_ elem) (in-js-object elems-to-rm)]
+        #:when (not (void? elem)))
+    (#js.elem.parentNode.removeChild elem))
+
+  (define elems-left
+    (#js*.document.getElementsByClassName #js.name))
+
+  ;; currently this only removes half the elements, not sure why
+  ;; have to go through again if there are still elements remaining
+  (when (< 0 #js.elems-left.length)
+    (remove-elems-by-classname name)))
+
+;; stop the ending animation
+(define (stop-end-animation!)
+  (when END-ANIMATION
+    (begin
+      (#js*.clearInterval END-ANIMATION)
+      (set! END-ANIMATION #f)))
+  (remove-elems-by-classname PROF-ANIM-CLASS-NAME))
+
 ;; reset the timer to the starting timer
 (define (reset-timer!)
+  (stop-end-animation!)
   (when TIMER (pause-timer! TIMER))
   (set-initial-timer!))
 
@@ -283,7 +310,7 @@
       (random (screen-height))
       (- (random) 0.5)
       (- (random) 0.5)))
-  (#js*.setInterval end 250))
+  (set! END-ANIMATION (#js*.setInterval end 250)))
 
 
 ;; ----- Event Binding -----
@@ -335,6 +362,7 @@
   ($/:= #js.img.style.zIndex "999")
   ($/:= #js.img.style.top "0")
   ($/:= #js.img.style.left "0")
+  ($/:= #js.img.className PROF-ANIM-CLASS-NAME)
   (#js.document.body.appendChild #js.img)
 
   (define x start-x)
